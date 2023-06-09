@@ -1,7 +1,6 @@
 package domain.service;
 
-import java.util.Optional;
-
+import domain.DomainUsuarioException;
 import domain.Usuario;
 import domain.dto.UsuarioDTO;
 import domain.repository.IUsuarioRepoPort;
@@ -9,10 +8,20 @@ import domain.repository.IUsuarioRepoPort;
 public class UsuarioService implements IUsuarioServicePort {
 	
 	private IUsuarioRepoPort usuarioRepo;
+	
+	public UsuarioService(IUsuarioRepoPort usuarioRepo) {
+		this.usuarioRepo = usuarioRepo;
+	}
 
 	@Override
-	public Optional<UsuarioDTO> buscarUsuarioPorId(Long id) {
-		return null;
+	public UsuarioDTO buscarUsuarioPorId(Long id) {
+		Usuario usuario = usuarioRepo.buscarPorId(id).
+				orElseThrow(() -> new DomainUsuarioException("Usuário não encontrado"));
+		return new UsuarioDTO(id, 
+				usuario.getNome(), 
+				usuario.getEmail(), 
+				usuario.getDtNascimento(), 
+				usuario.getHabilidades());
 	}
 
 	@Override
@@ -32,9 +41,7 @@ public class UsuarioService implements IUsuarioServicePort {
 
 	@Override
 	public UsuarioDTO atualizarUsuario(UsuarioDTO usuarioDTO) {
-		// TODO Auto-generated method stub
 		return null;
 	}
-	
 
 }
